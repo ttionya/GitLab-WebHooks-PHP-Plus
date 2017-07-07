@@ -8,13 +8,24 @@
 
 /*
  * Hook 文件
+ *
+ * 建议绝对路径
  */
 $hookfile = 'hook.sh';
 
 /*
  * 日志文件
+ *
+ * 建议绝对路径
  */
 $logfile = 'hook.log';
+
+/*
+ * 项目路径
+ *
+ * 建议绝对路径
+ */
+$project_dir = '/data/www/default/webhooks/';
 
 /*
  * Token
@@ -91,7 +102,7 @@ function logs($msg, $time = null) {
 }
 
 
-$cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $logfile;
+$cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $project_dir . ' ' . $logfile;
 
 logs('运行脚本：' . $cmd);
 exec($cmd);
