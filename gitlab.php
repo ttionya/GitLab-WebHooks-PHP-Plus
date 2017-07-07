@@ -90,19 +90,9 @@ function logs($msg, $time = null) {
     file_put_contents($logfile, $text . $msg . "\n", FILE_APPEND);
 }
 
-function exec_command($cmd)
-{
-    $output = array();
 
-    exec($cmd, $output);
-
-    foreach ($output as $line) {
-        logs('SHELL: ' . $line);
-    }
-}
-
-$cmd = 'sh ' . $hookfile . ' ' . $branch;
+$cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $logfile;
 
 logs('运行脚本：' . $cmd);
-exec_command($cmd);
+exec($cmd);
 logs('脚本运行完成');
