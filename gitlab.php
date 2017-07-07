@@ -42,7 +42,7 @@ $token = '9998877';
  *   'refs/heads/master'                                master 分支
  *   '/^refs\/heads\/(master|dev)$/i'                   master 和 dev 分支
  */
-$ref = '/^refs\/heads\/master$/i';
+$ref = '*';
 
 /*
  * Check Token
@@ -106,4 +106,3 @@ $cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $project_dir . ' ' . $logfile;
 
 logs('运行脚本：' . $cmd);
 exec($cmd);
-logs('脚本运行完成');
