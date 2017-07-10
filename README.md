@@ -1,17 +1,17 @@
 # GitLab Web Hook For PHP
 
-### 开始使用
+## 开始使用
 
 - [Git](https://git-scm.com/)：需要支持 `-C` 命令
 - [PHP](http://php.net/downloads.php)：需要有 `exec` 函数执行权限，使用前需要将 `exec` 函数从 `disable_functions` 列表中移除。
 
-#### 1. 克隆项目文件
+### 1. 克隆项目文件
 
 ```shell
 git clone git@gitlab.com:project/project.git project
 ```
 
-#### 2. 克隆 `gitlab-webhooks-php`
+### 2. 克隆 `gitlab-webhooks-php`
 
 可以将本脚本 ` git clone` 到任何地方，但需要确保可以使用 http 访问。
 
@@ -20,7 +20,7 @@ git clone git@github.com:ttionya/gitlab-webhooks-php.git
 cd gitlab-webhooks-php
 ```
 
-#### 3. 配置 `gitlab.php` 文件
+### 3. 配置 `gitlab.php` 文件
 
 使用编辑器编辑 `gitlab.php` 文件
 
@@ -31,7 +31,7 @@ cd gitlab-webhooks-php
 - $token： Token，用于鉴定来源是否合法。不仅需要在 GitLab 控制台的 `Secret Token` 中添加，还需要在 `URL` 中添加，例如 `http://example.com/?token=xxxxxxx`
 - $ref： 根据分支判断是否需要执行 `git pull` 操作。支持 `*` 指定任何分支，字符串 `refs/heads/master` 指定具体分支，正则表达式 `/^refs\/heads\/(master|dev)$/i` 匹配多个分支
 
-#### 4. 配置 GitLab 项目的 Webhooks
+### 4. 配置 GitLab 项目的 Webhooks
 
 **GitLab 控制台 => 选择项目 => Setting => Integrations 添加 Webhooks**
 
@@ -42,7 +42,7 @@ URL: http://example.com/?token=9998877
 Secret Token: 9998877
 ```
 
-#### 5. 权限配置
+### 5. 权限配置
 
 大多数 Web Server 都会使用一个低权限的用户运行以确保安全，所以需要先确定 Web Server 使用的用户。
 
@@ -86,6 +86,15 @@ chown -R www:www project
 chown -R www:www gitlab-webhooks-php
 ```
 
-#### 6. 测试服务器是否通信成功
+### 6. 测试服务器是否通信成功
 
 在 GitLab 控制台添加后点击 `Test` 按钮，查看日志文件是否被创建并包含内容。
+
+## 致谢
+
+- [https://github.com/bravist/gitlab-webhook-php/](https://github.com/bravist/gitlab-webhook-php/)
+- [https://gitlab.com/kpobococ/gitlab-webhook](https://gitlab.com/kpobococ/gitlab-webhook)
+
+## 许可证
+
+MIT
