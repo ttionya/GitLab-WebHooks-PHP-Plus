@@ -47,8 +47,13 @@ $ref = '*';
 /*
  * Check Token
  */
-$headers = getallheaders();
-$remote_token = $headers['X-Gitlab-Token'];
+if (function_exists(getallheaders)) { // 存在该函数
+    $headers = getallheaders();
+    $remote_token = $headers['X-Gitlab-Token'];
+}
+else {
+    $remote_token = $_GET['token'];
+}
 
 if (empty($remote_token)) {
     logs('请求中不包含 Token');
