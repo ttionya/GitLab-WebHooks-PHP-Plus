@@ -1,48 +1,15 @@
 <?php
 /**
  * GitLab Web Hook PHP 版
+ * 
+ * 用于为每个远程分支生成独立的测试环境
  *
- * 注意：需要使用 exec 函数，请确定该函数可用
+ * 注意：1、需要使用 exec 函数，请确定该函数可用
+ *      2、Web Server 为 Nginx
+ * 
  */
 
-
-/*
- * Hook 文件
- *
- * 建议绝对路径
- */
-$hookfile = 'hook.sh';
-
-/*
- * 日志文件
- *
- * 建议绝对路径
- */
-$logfile = 'hook.log';
-
-/*
- * 项目路径
- *
- * 建议绝对路径
- */
-$project_dir = '/data/www/default/webhooks/';
-
-/*
- * Token
- *
- * 填写 Secret Token
- */
-$token = '9998877';
-
-/*
- * ref
- *
- * 支持
- *   '*'                                                任何分支
- *   'refs/heads/master'                                master 分支
- *   '/^refs\/heads\/(master|dev)$/i'                   master 和 dev 分支
- */
-$ref = '*';
+include 'settings.php';
 
 /*
  * Check Token
@@ -76,14 +43,13 @@ if (!is_object($json) || empty($remote_ref)) {
     die();
 }
 
-/*
- * Check ref
- */
+// 校验 ref
 $is_matched = false;
 if ($ref === '*' || $remote_ref === $ref || substr($ref, 0 ,1) === '/' && preg_match($ref, $remote_ref)) {
     $is_matched = true;
 }
 
+// 获得分支名或者不匹配退出
 if ($is_matched) {
     preg_match('/(?:.*\/)*(.*)/i', $remote_ref, $branch);
     $branch = $branch[1];
@@ -91,6 +57,15 @@ if ($is_matched) {
 else {
     logs('忽略 ref：' . $remote_ref);
     die();
+}
+
+// 获得域名前缀
+// 判断是否属于特殊分支，特殊分支有指定的下级域名
+if (array_key_exists($branch, $special_branches)) {
+    $branchDomain = str_replace('.', '-', $special_branches[$branch]);
+}
+else {
+    $branchDomain = str_replace('.', '-', $branch);
 }
 
 
@@ -107,6 +82,8 @@ function logs($msg, $time = null) {
 }
 
 
+// 判断当前分支是否存在
+$branchIsExist = exec('sh ' . $hookfile . ' 1 ' . $branchfile . ' ' . $branch);
 $cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $project_dir . ' ' . $logfile;
 
 logs('运行脚本：' . $cmd);

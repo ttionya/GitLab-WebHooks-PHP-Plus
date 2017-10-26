@@ -1,1 +1,8 @@
+# IDE
+.idea
+
+# Log Files
 *.log
+
+# Data Files
+*.data
