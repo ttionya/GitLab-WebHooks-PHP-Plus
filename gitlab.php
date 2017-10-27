@@ -68,11 +68,43 @@ else {
     $branch_safe = preg_replace('/\W/', '-', $branch);
 }
 
+// 执行命令的数组
+$cmd_array = array(
+    'sh',
+    $hookfile,
+    '',
+    $branchfile,
+    $branch,
+    $branch_safe,
+    $logfile,
+    $nginx_bin_path,
+    $nginx_conf_path,
+    $nginx_template_file,
+    $project_dir,
+    $domain,
+    $free_branch_limit
+);
+
 // 当前 Push 分支状态
 if ($json->after === str_pad('', 40, '0')) { // 分支被删除了
-    exec('sh ' . $hookfile . ' 2 ' . $branchfile . ' ' . $branch_safe . ' ' . $project_dir . ' ' . $free_branch_limit . ' ' . $logfile);
+    $cmd_array[2] = 'delBranch';
+    $cmd = implode(' ', $cmd_array);
+    
+    logs('运行脚本：' . $cmd);
+    exec($cmd);
 }
+else { // 正常分支推送
 
+}
+/*
+判断分支是否激活 -> 激活 -> 直接更新分支
+              |
+              -> 未激活 -> 是否存在历史文件夹 -> 存在 -> 将该闲置文件夹激活 + 新建 Nginx 配置 + 更新分支
+                                          |
+                                          -> 不存在 -> 是否有闲置文件夹 -> 有 -> 重命名文件夹并激活 + 新建 Ng 配置 + 更新
+                                                                    |
+                                                                    -> 无 -> 重新 clone + 新建 Ng 配置
+*/
 
 /*
  * Functions
