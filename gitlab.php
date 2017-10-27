@@ -59,13 +59,18 @@ else {
     die();
 }
 
-// 获得域名前缀
+// 获得下级域名
 // 判断是否属于特殊分支，特殊分支有指定的下级域名
 if (array_key_exists($branch, $special_branches)) {
-    $branchDomain = str_replace('.', '-', $special_branches[$branch]);
+    $branch_safe = preg_replace('/\W/', '-', $special_branches[$branch]);
 }
 else {
-    $branchDomain = str_replace('.', '-', $branch);
+    $branch_safe = preg_replace('/\W/', '-', $branch);
+}
+
+// 当前 Push 分支状态
+if ($json->after === str_pad('', 40, '0')) { // 分支被删除了
+    exec('sh ' . $hookfile . ' 2 ' . $branchfile . ' ' . $branch_safe . ' ' . $project_dir . ' ' . $free_branch_limit . ' ' . $logfile);
 }
 
 
@@ -81,7 +86,8 @@ function logs($msg, $time = null) {
     file_put_contents($logfile, $text . $msg . "\n", FILE_APPEND);
 }
 
-
+$after_hash = $json->after;             // 提交后分支哈希，用于判断分支是否被删除
+$user_email = $json->user_email;        // 执行 push 操作的用户邮箱
 // 判断当前分支是否存在
 $branchIsExist = exec('sh ' . $hookfile . ' 1 ' . $branchfile . ' ' . $branch);
 $cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $project_dir . ' ' . $logfile;

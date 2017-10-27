@@ -1,10 +1,10 @@
 <?php
 /*
- * 项目路径
+ * 项目父目录
  *
- * 建议绝对路径
+ * 存放项目的父目录路径，建议绝对路径
  */
-$project_dir = '/data/www/default/webhooks/';
+$project_dir = '/data/www/default/project/';
 
 /*
  * 域名
@@ -48,6 +48,7 @@ $special_branches = array(
 
 
 /****************************** 不要修改以下内容 ******************************/
-$hookfile       = 'hook.sh';            // 脚本文件
-$logfile        = 'hook.log';           // 日志文件
-$branchfile     = 'branch.data';        // 分支状态记录文件
+$hookfile               = 'hook.sh';            // 脚本文件
+$logfile                = 'hook.log';           // 日志文件
+$branchfile             = 'branch.data';        // 分支状态记录文件
+$free_branch_limit      = 5;                    // 空闲文件夹数，会删除超过该数量的分支文件夹
