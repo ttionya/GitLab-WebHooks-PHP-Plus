@@ -6,3 +6,6 @@
 
 # Data Files
 *.data
+
+# Template Files
+*.template

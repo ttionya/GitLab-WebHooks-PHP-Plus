@@ -46,6 +46,26 @@ $special_branches = array(
     "dev" => "test"
 );
 
+/*
+ * Nginx 执行文件目录
+ * 
+ * 绝对路径 
+ */
+$nginx_bin_path = '/usr/local/nginx/sbin/nginx';
+
+/*
+ * Nginx 配置文件目录
+ * 
+ * 绝对路径
+ */
+$nginx_conf_path = '/usr/local/nginx/conf/gitlab-hook/';
+
+/*
+ * Nginx 模板文件
+ * 
+ * 建议绝对路径
+ */
+$nginx_template_file = './nginx.conf.template';
 
 /****************************** 不要修改以下内容 ******************************/
 $hookfile               = 'hook.sh';            // 脚本文件
