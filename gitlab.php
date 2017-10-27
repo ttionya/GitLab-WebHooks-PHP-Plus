@@ -106,7 +106,10 @@ else { // 正常分支推送
         $cmd = implode(' ', $cmd_array);
         
         logs('运行脚本：' . $cmd);
-        exec($cmd);
+        $result = exec($cmd);
+
+        // 发邮件
+        sendmail($result, $cmd);
     }
     else {
 
@@ -132,6 +135,15 @@ function logs($msg, $time = null) {
     $text  = $date . ' (' . $_SERVER['REMOTE_ADDR'] . '): ';
 
     file_put_contents($logfile, $text . $msg . "\n", FILE_APPEND);
+}
+
+function sendmail($result, $cmd) {
+    if ($result) {
+        // 成功
+    }
+    else {
+        // 失败
+    }
 }
 
 $after_hash = $json->after;             // 提交后分支哈希，用于判断分支是否被删除

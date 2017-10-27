@@ -26,7 +26,7 @@ if [ $1 == 'checkActive' ]; then
 # 分支激活状态，更新分支
 else if [ $1 == 'activeAndPull' ]; then
     echo "开始对 $9$4 文件夹 $3 分支执行 Pull 操作..." >> $5 2>&1
-    git -C $9$4 fetch origin $3 --prune >> $5 2>&1 && git -C $9$4 checkout $3 >> $5 2>&1 && git -C $9$4 pull >> $5 2>&1
+    git -C $9$4 fetch origin $3 --prune >> $5 2>&1 && git -C $9$4 checkout $3 >> $5 2>&1 && git -C $9$4 pull >> $5 2>&1 && echo 1
 
 # 移除分支相关内容
 else if [ $1 == 'delBranch' ]; then
