@@ -87,25 +87,14 @@ $cmd_array = array(
 
 // 当前 Push 分支状态
 if ($json->after === str_pad('', 40, '0')) { // 分支被删除了
-    $cmd_array[2] = 'delBranch';
-    $cmd = implode(' ', $cmd_array);
-    
-    logs('运行脚本：' . $cmd);
-    exec($cmd);
+    exec(get_cmd('delBranch'));
 }
 else { // 正常分支推送
     // 判断分支是否激活
-    $cmd_array[2] = 'checkActive';
-    $cmd = implode(' ', $cmd_array);
-    
-    logs('运行脚本：' . $cmd);
-    $is_active = exec($cmd);
+    $is_active = exec(get_cmd('checkActive'));
 
     if ($is_active) {
-        $cmd_array[2] = 'activeAndPull';
-        $cmd = implode(' ', $cmd_array);
-        
-        logs('运行脚本：' . $cmd);
+        $cmd = get_cmd('activeAndPull');
         $result = exec($cmd);
 
         // 发邮件
@@ -137,6 +126,16 @@ function logs($msg, $time = null) {
     file_put_contents($logfile, $text . $msg . "\n", FILE_APPEND);
 }
 
+function get_cmd($active_name) {
+    global $cmd_array;
+
+    $cmd_array[2] = $active_name;
+    $cmd = implode(' ', $cmd_array);
+    
+    logs('运行脚本：' . $cmd);
+    return $cmd;
+}
+
 function sendmail($result, $cmd) {
     if ($result) {
         // 成功
@@ -146,11 +145,4 @@ function sendmail($result, $cmd) {
     }
 }
 
-$after_hash = $json->after;             // 提交后分支哈希，用于判断分支是否被删除
 $user_email = $json->user_email;        // 执行 push 操作的用户邮箱
-// 判断当前分支是否存在
-$branchIsExist = exec('sh ' . $hookfile . ' 1 ' . $branchfile . ' ' . $branch);
-$cmd = 'sh ' . $hookfile . ' ' . $branch . ' ' . $project_dir . ' ' . $logfile;
-
-logs('运行脚本：' . $cmd);
-exec($cmd);
