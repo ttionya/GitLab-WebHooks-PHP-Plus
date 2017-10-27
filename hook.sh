@@ -12,11 +12,21 @@
 # ${10} 域名
 # ${11} 空闲文件夹数
 
-# 判断当前分支是否存在
-# $2 分支状态记录文件
-# $3 分支名
-if [ $1 == 1 ]; then
-    cat $2 | grep -P "^$3 " | wc -l
+# 判断分支是否处于激活状态
+if [ $1 == 'checkActive' ]; then
+    activeCount=`grep -P "^$4 1" $2 | wc -l`
+    echo "$activeCount"
+    
+    if [ $activeCount -gt 0 ]; then
+        echo "分支 $3 处于激活状态" >> $5 2>&1
+    else
+        echo "分支 $3 处于未激活状态" >> $5 2>&1
+    fi
+
+# 分支激活状态，更新分支
+else if [ $1 == 'activeAndPull' ]; then
+    echo "开始对 $9$4 文件夹 $3 分支执行 Pull 操作..." >> $5 2>&1
+    git -C $9$4 fetch origin $3 --prune >> $5 2>&1 && git -C $9$4 checkout $3 >> $5 2>&1 && git -C $9$4 pull >> $5 2>&1
 
 # 移除分支相关内容
 else if [ $1 == 'delBranch' ]; then
@@ -35,10 +45,6 @@ else if [ $1 == 'delBranch' ]; then
     echo "$delDir" | xargs rm -rf
     echo "$delBranch" | xargs -I {} sed -i '/^{} /d' $2
     echo "移除多余文件夹：`echo "$delDir" | tr '\n' ' '`" >> $5 2>&1
-
-# 正常分支推送
-else if [ $1 == 3 ]; then
-
 fi
 
 BRANCH=`git -C $2 branch | grep -E "^[* ]*$1$" -c`

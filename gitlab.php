@@ -94,7 +94,23 @@ if ($json->after === str_pad('', 40, '0')) { // 分支被删除了
     exec($cmd);
 }
 else { // 正常分支推送
+    // 判断分支是否激活
+    $cmd_array[2] = 'checkActive';
+    $cmd = implode(' ', $cmd_array);
+    
+    logs('运行脚本：' . $cmd);
+    $is_active = exec($cmd);
 
+    if ($is_active) {
+        $cmd_array[2] = 'activeAndPull';
+        $cmd = implode(' ', $cmd_array);
+        
+        logs('运行脚本：' . $cmd);
+        exec($cmd);
+    }
+    else {
+
+    }
 }
 /*
 判断分支是否激活 -> 激活 -> 直接更新分支
