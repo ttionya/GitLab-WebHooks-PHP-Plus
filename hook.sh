@@ -30,6 +30,11 @@ function init() {
         mkdir -p $9 >> $5 2>&1
     fi
 
+    # 判断 $7 目录是否存在，不存在则创建目录
+    if [ ! -d $7 ]; then
+        mkdir -p $7 >> $5 2>&1
+    fi
+
     # 判断 $2 文件是否存在，不存在则创建空文件
     if [ ! -e $2 ]; then
         cat /dev/null > $2
@@ -65,6 +70,22 @@ function git_clone() {
     fi
 }
 
+function nginx_add_conf() {
+    echo "添加配置到 $7$4${10}.conf" >> $5 2>&1
+    sed "s/{{domain}}/$4.${10}/" $8 | sed "s/{{path}}/$9$4/" > $7$4${10}.conf >> $5 2>&1
+
+    sudo $6 -s reload \
+    && echo "重启 Nginx 成功" >> $5 2>&1
+}
+
+function nginx_remove_conf() {
+    echo "移除配置文件 $7$4${10}.conf" >> $5 2>&1
+    rm -f $7$4${10}.conf >> $5 2>&1
+
+    sudo $6 -s reload \
+    && echo "重启 Nginx 成功" >> $5 2>&1
+}
+
 # 初始化
 init $@
 
@@ -96,6 +117,7 @@ if [ $1 == 'pushBranch' ]; then
             sed -i "s/^$4 .*/$4 1/" $2 2>&1
 
             # 添加 Nginx 配置
+            nginx_add_conf $@
 
             # 更新分支
             git_pull $@
@@ -112,6 +134,7 @@ if [ $1 == 'pushBranch' ]; then
                 && echo "$4 1" >> $2 2>&1
 
                 # 添加 Nginx 配置
+                nginx_add_conf $@
 
                 # 更新分支
                 git_pull $@
@@ -119,6 +142,7 @@ if [ $1 == 'pushBranch' ]; then
                 mkdir -p $9$4 >> $5 2>&1
 
                 # 添加 Nginx 配置
+                nginx_add_conf $@
 
                 git_clone $@ \
                 \
@@ -135,7 +159,8 @@ elif [ $1 == 'delBranch' ]; then
     now=`date +%s`
     sed -i "s/^\($4\) .*/\1 0 $now/" $2
 
-    # 删除 Nginx 配置并重启 Nginx
+    # 删除 Nginx 配置
+    nginx_remove_conf $@
 
     # 移除多余文件夹
     saveCount=`expr ${11} + 1`

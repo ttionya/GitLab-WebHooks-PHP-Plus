@@ -1,0 +1,26 @@
+# Nginx 配置模板
+# 
+# 使用方式：
+#       1. 复制本文件并移动至 $nginx_template_file (settings.php) 所示路径，并删除本段注释；
+#       2. 对复制的文件进行配置，生成 Nginx 配置文件时会替换相关字符串；
+#       3. 生成的配置文件将存放在 $nginx_conf_path (settings.php) 所示路径下，以 master.test.example.com.conf 的格式存放；
+#       4. 您需要手动将 $nginx_conf_path (settings.php) 的路径添加在 nginx.conf 中，比如 include gitlab-hook/*.conf;
+#       5. 因为需要重启 Nginx 才能使新配置生效，所以需要将低权限用户对 Nginx 程序的执行权限添加到 /etc/sudoers 中；
+#       6. 建议使用 include 引入固定配置文件。
+# 
+# 替换：
+#       1. {{domain}} 替换为 [branch].[setting.$domain] 的格式
+#       2. {{path}} 替换为 [setting.$project_dir][branch] 的格式
+#
+
+server
+    {
+        listen 80;
+        server_name {{domain}};
+        index index.html index.htm index.php;
+        root  {{path}};
+
+        include someconfs.conf;
+
+        access_log  /home/wwwlogs/access.{{domain}}.log  access;
+}

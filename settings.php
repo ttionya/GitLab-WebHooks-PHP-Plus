@@ -59,6 +59,8 @@ $nginx_bin_path = '/usr/local/nginx/sbin/nginx';
  * Nginx 配置文件目录
  * 
  * 绝对路径
+ * 
+ * 最后一个斜杠 '/' 必须存在
  */
 $nginx_conf_path = '/usr/local/nginx/conf/gitlab-hook/';
 
