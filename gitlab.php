@@ -90,19 +90,11 @@ if ($json->after === str_pad('', 40, '0')) { // 分支被删除了
     exec(get_cmd('delBranch'));
 }
 else { // 正常分支推送
-    // 判断分支是否激活
-    $is_active = exec(get_cmd('checkActive'));
+    $cmd = get_cmd('pushBranch');
+    $result = exec($cmd);
 
-    if ($is_active) {
-        $cmd = get_cmd('activeAndPull');
-        $result = exec($cmd);
-
-        // 发邮件
-        sendmail($result, $cmd);
-    }
-    else {
-
-    }
+    // 发邮件
+    sendmail($result, $cmd);
 }
 /*
 判断分支是否激活 -> 激活 -> 直接更新分支

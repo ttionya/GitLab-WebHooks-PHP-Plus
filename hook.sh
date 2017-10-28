@@ -12,23 +12,67 @@
 # ${10} 域名
 # ${11} 空闲文件夹数
 
-# 判断分支是否处于激活状态
-if [ $1 == 'checkActive' ]; then
+function del_no_dir_branch() {
+    # $1 原始分支名
+    # $2 对应分支路径
+    # $3 分支状态记录文件
+    
+    if [ ! -d "$2" ]; then
+        sed -i "/^$1 /d" $3
+    fi
+}
+export -f del_no_dir_branch
+
+function init() {
+    # 判断 $2 文件是否存在，不存在则创建空文件
+    if [ ! -e $2 ]; then
+        cat /dev/null > $2
+    fi
+
+    # 判断每个分支是否存在对应的文件夹，不存在则从 $2 删除对应分支记录
+    awk -v "PATH=$9" '{print $1" "PATH$1}' $2 | xargs -I {} bash -c "del_no_dir_branch {} $2"
+}
+
+function git_pull() {
+    echo "开始对 $9$4 文件夹 $3 分支执行 Pull 操作..." >> $5 2>&1
+    
+    git -C $9$4 fetch origin $3 --prune >> $5 2>&1 \
+    && git -C $9$4 checkout $3 >> $5 2>&1 \
+    && git -C $9$4 pull >> $5 2>&1
+
+    if [ $? != 0 ]; then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
+# 初始化
+init $@
+
+# 分支正常推送
+# 判断分支是否激活 -> 激活 -> 【Pull】
+#                |
+#                |
+#                |
+#                |
+#               -> 未激活 -> 判断历史文件夹是否存在 -> 存在 -> 
+#
+if [ $1 == 'pushBranch' ]; then
     activeCount=`grep -P "^$4 1" $2 | wc -l`
-    echo "$activeCount"
     
     if [ $activeCount -gt 0 ]; then
         echo "分支 $3 处于激活状态" >> $5 2>&1
+    
+        # 更新分支
+        git_pull $@
     else
         echo "分支 $3 处于未激活状态" >> $5 2>&1
+
+
     fi
 
-# 分支激活状态，更新分支
-else if [ $1 == 'activeAndPull' ]; then
-    echo "开始对 $9$4 文件夹 $3 分支执行 Pull 操作..." >> $5 2>&1
-    git -C $9$4 fetch origin $3 --prune >> $5 2>&1 && git -C $9$4 checkout $3 >> $5 2>&1 && git -C $9$4 pull >> $5 2>&1 && echo 1
-
-# 移除分支相关内容
+# 移除分支
 else if [ $1 == 'delBranch' ]; then
     echo "移除分支：$3 ($4)" >> $5 2>&1
 
