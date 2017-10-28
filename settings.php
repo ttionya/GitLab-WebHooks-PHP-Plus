@@ -25,6 +25,12 @@ $domain = 'test.example.com';
 $token = '9998877';
 
 /*
+ * 仓库所有者和名称
+ *
+ */
+$repo_name = 'username/reponame';
+
+/*
  * ref
  *
  * 支持

@@ -37,10 +37,17 @@ elseif ($remote_token !== $token) {
 $input = file_get_contents("php://input");
 $json  = json_decode($input);
 $remote_ref = $json->ref;
+$remote_repo_name = $json->project->path_with_namespace;
 $git_ssh_url = $json->repository->git_ssh_url;
 
 if (!is_object($json) || empty($remote_ref)) {
     logs('无效数据');
+    die();
+}
+
+// 校验仓库名
+if ($remote_repo_name !== $repo_name) {
+    logs('忽略仓库：' . $remote_repo_name);
     die();
 }
 
@@ -122,6 +129,10 @@ function get_cmd($active_name) {
 }
 
 function sendmail($result, $cmd) {
+    global $json;
+
+    $user_email = $json->user_email; // 执行 push 操作的用户邮箱
+
     if ($result) {
         // 成功
         logs('成功');
@@ -131,5 +142,3 @@ function sendmail($result, $cmd) {
         logs('失败');
     }
 }
-
-$user_email = $json->user_email;        // 执行 push 操作的用户邮箱
