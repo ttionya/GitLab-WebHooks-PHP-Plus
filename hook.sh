@@ -30,11 +30,6 @@ function init() {
         mkdir -p $9 >> $5 2>&1
     fi
 
-    # 判断 $7 目录是否存在，不存在则创建目录
-    if [ ! -d $7 ]; then
-        mkdir -p $7 >> $5 2>&1
-    fi
-
     # 判断 $2 文件是否存在，不存在则创建空文件
     if [ ! -e $2 ]; then
         cat /dev/null > $2
@@ -71,16 +66,16 @@ function git_clone() {
 }
 
 function nginx_add_conf() {
-    echo "添加配置到 $7$4.${10}.conf" >> $5 2>&1
-    sed "s/{{domain}}/$4.${10}/" $8 | sed "s/{{path}}/$9$4/" > $7$4.${10}.conf >> $5 2>&1
+    sed "s#{{domain}}#$4.${10}#" $8 | sed "s#{{path}}#$9$4#" > $7$4.${10}.conf \
+    && echo "成功添加配置到 $7$4.${10}.conf" >> $5 2>&1
 
     sudo $6 -s reload \
     && echo "重启 Nginx 成功" >> $5 2>&1
 }
 
 function nginx_remove_conf() {
-    echo "移除配置文件 $7$4.${10}.conf" >> $5 2>&1
-    rm -f $7$4.${10}.conf >> $5 2>&1
+    rm -f $7$4.${10}.conf >> $5 2>&1 \
+    && echo "成功移除配置文件 $7$4.${10}.conf" >> $5 2>&1
 
     sudo $6 -s reload \
     && echo "重启 Nginx 成功" >> $5 2>&1
