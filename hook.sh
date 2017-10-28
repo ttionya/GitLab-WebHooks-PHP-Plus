@@ -25,6 +25,11 @@ function del_no_dir_branch() {
 export -f del_no_dir_branch
 
 function init() {
+    # 判断 $9 目录是否存在，不存在则创建目录
+    if [ ! -d $9 ]; then
+        mkdir -p $9 >> $5 2>&1
+    fi
+
     # 判断 $2 文件是否存在，不存在则创建空文件
     if [ ! -e $2 ]; then
         cat /dev/null > $2
@@ -52,12 +57,6 @@ function git_clone() {
     echo "开始 Clone ${12} $3 分支到 $9$4 文件夹" >> $5 2>&1
 
     git -C $9 clone -b $3 ${12} $4 >> $5 2>&1
-
-    if [ $? != 0 ]; then
-        echo 0
-    else
-        echo 1
-    fi
 }
 
 # 初始化
@@ -88,6 +87,8 @@ if [ $1 == 'pushBranch' ]; then
         if [ $isIdle -gt 0 ]; then
             echo "切换分支 $3 到激活状态" >> $5 2>&1
 
+            sed -i "s/^$4 .*/$4 1/" $2 2>&1
+
             # 添加 Nginx 配置
 
             # 更新分支
@@ -102,12 +103,16 @@ if [ $1 == 'pushBranch' ]; then
 
                 mv $oldDir $9$4 >> $5 2>&1
 
+                echo "$4 1" >> $2 2>&1
+
                 # 添加 Nginx 配置
 
                 # 更新分支
                 git_pull $@
             else
                 git_clone $@
+
+                echo "$4 1" >> $2 2>&1
 
                 # 添加 Nginx 配置
             fi
