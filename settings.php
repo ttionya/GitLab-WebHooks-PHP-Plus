@@ -64,6 +64,8 @@ $nginx_bin_path = '/usr/local/nginx/sbin/nginx';
 /*
  * Nginx 配置文件目录
  * 
+ * 保存脚本自动生成的配置文件的独立的目录
+ * 
  * 绝对路径
  * 
  * 最后一个斜杠 '/' 必须存在
