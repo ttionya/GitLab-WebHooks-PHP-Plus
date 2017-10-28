@@ -124,9 +124,11 @@ function get_cmd($active_name) {
 function sendmail($result, $cmd) {
     if ($result) {
         // 成功
+        logs('成功');
     }
     else {
         // 失败
+        logs('失败');
     }
 }
 

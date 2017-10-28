@@ -3,6 +3,8 @@
  * 项目父目录
  *
  * 存放项目的父目录路径，建议绝对路径
+ * 
+ * 最后一个斜杠 '/' 必须存在
  */
 $project_dir = '/data/www/default/project/';
 
