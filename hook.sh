@@ -71,16 +71,16 @@ function git_clone() {
 }
 
 function nginx_add_conf() {
-    echo "添加配置到 $7$4${10}.conf" >> $5 2>&1
-    sed "s/{{domain}}/$4.${10}/" $8 | sed "s/{{path}}/$9$4/" > $7$4${10}.conf >> $5 2>&1
+    echo "添加配置到 $7$4.${10}.conf" >> $5 2>&1
+    sed "s/{{domain}}/$4.${10}/" $8 | sed "s/{{path}}/$9$4/" > $7$4.${10}.conf >> $5 2>&1
 
     sudo $6 -s reload \
     && echo "重启 Nginx 成功" >> $5 2>&1
 }
 
 function nginx_remove_conf() {
-    echo "移除配置文件 $7$4${10}.conf" >> $5 2>&1
-    rm -f $7$4${10}.conf >> $5 2>&1
+    echo "移除配置文件 $7$4.${10}.conf" >> $5 2>&1
+    rm -f $7$4.${10}.conf >> $5 2>&1
 
     sudo $6 -s reload \
     && echo "重启 Nginx 成功" >> $5 2>&1
