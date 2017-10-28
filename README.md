@@ -11,7 +11,7 @@
 - [Git](https://git-scm.com/)：需要支持 `-C` 命令
 - [PHP](http://php.net/downloads.php)：需要有 `exec` 函数执行权限，使用前需要将 `exec` 函数从 `disable_functions` 列表中移除。
 - [Nginx](https://nginx.org/en/download.html)
-- 会适当地降低服务器安全性，见**权限配置**一节
+- 会略微降低服务器安全性，相关权限配置见[**权限配置**](#4-权限配置)一节
 
 ### 1. 克隆 `GitLab-WebHooks-PHP-Plus`
 
@@ -122,7 +122,8 @@ sed -i 's/^Defaults\(.*\)requiretty/#Defaults\1requiretty/' /etc/sudoers
 ## 说明
 
 - 分支名与子域名不是完全的对应关系，脚本会将 `\W` 替换为 `-`，请避免使用此类分支，如 `feature.xxx` 和 `feature@xxx` 都将替换为 `feature-xxx`
-
+- 需要将指定域名的全部子域名指向部署该脚本的服务器，如填写 `test.example.com`，需要将 `*.test.example.com` 的 DNS 记录指向部署该脚本的服务器
+- 以后或许会添加分支部署 / 更新完成后自动发送邮件的功能
 
 ## 许可证
 

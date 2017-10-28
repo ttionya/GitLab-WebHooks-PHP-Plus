@@ -11,9 +11,9 @@ $project_dir = '/data/www/default/project/';
 /*
  * 域名
  * 
- * 需要将该域名的下级域名 DNS A 记录指向部署该脚本的服务器
+ * 需要将该域名的下级域名 DNS 记录指向部署该脚本的服务器
  * 
- * 例如：填写 'test.example.com'，需要将 '*.test.example.com' 的 DNS A 记录指向部署该脚本的服务器
+ * 例如：填写 'test.example.com'，需要将 '*.test.example.com' 的 DNS 记录指向部署该脚本的服务器
  */
 $domain = 'test.example.com';
 
