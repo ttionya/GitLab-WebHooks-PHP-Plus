@@ -37,6 +37,7 @@ elseif ($remote_token !== $token) {
 $input = file_get_contents("php://input");
 $json  = json_decode($input);
 $remote_ref = $json->ref;
+$git_ssh_url = $json->repository->git_ssh_url;
 
 if (!is_object($json) || empty($remote_ref)) {
     logs('无效数据');
@@ -82,7 +83,8 @@ $cmd_array = array(
     $nginx_template_file,
     $project_dir,
     $domain,
-    $free_branch_limit
+    $free_branch_limit,
+    $git_ssh_url
 );
 
 // 当前 Push 分支状态
@@ -96,15 +98,6 @@ else { // 正常分支推送
     // 发邮件
     sendmail($result, $cmd);
 }
-/*
-判断分支是否激活 -> 激活 -> 直接更新分支
-              |
-              -> 未激活 -> 是否存在历史文件夹 -> 存在 -> 将该闲置文件夹激活 + 新建 Nginx 配置 + 更新分支
-                                          |
-                                          -> 不存在 -> 是否有闲置文件夹 -> 有 -> 重命名文件夹并激活 + 新建 Ng 配置 + 更新
-                                                                    |
-                                                                    -> 无 -> 重新 clone + 新建 Ng 配置
-*/
 
 /*
  * Functions
