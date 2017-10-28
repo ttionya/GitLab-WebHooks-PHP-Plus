@@ -102,11 +102,10 @@ if [ $1 == 'pushBranch' ]; then
         else
             # 判断其他分支空闲
             otherIdle=`awk '/^[-0-9A-Za-z]* 0 .*/{print $3" "$1}' $2 | sort -k2 | head -n 1`
-            hasOtherIdle=`echo $otherIdle | wc -L`
-            if [ $hasOtherIdle -gt 0 ]; then
+            if [ `echo $otherIdle | wc -L` -gt 0 ]; then
                 oldDir=`echo $otherIdle | awk -v "PATH=$9" -F " " '{print $2}'`
                 
-                echo "将 $oldDir 重命名为 $9$4" >> $5 2>&1
+                echo "将 $9$oldDir 重命名为 $9$4" >> $5 2>&1
 
                 mv $9$oldDir $9$4 >> $5 2>&1 \
                 \
