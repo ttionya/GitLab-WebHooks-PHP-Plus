@@ -42,9 +42,11 @@ function init() {
 function git_pull() {
     echo "开始对 $9$4 文件夹 $3 分支执行 Pull 操作..." >> $5 2>&1
     
-    git -C $9$4 fetch origin $3 --prune >> $5 2>&1 \
+    git -C $9$4 fetch origin $3 >> $5 2>&1 \
+    && git -C $9$4 fetch --prune >> $5 2>&1 \
     && git -C $9$4 checkout $3 >> $5 2>&1 \
-    && git -C $9$4 pull >> $5 2>&1
+    && git -C $9$4 reset --hard origin/$3 >> $5 2>&1
+    # && git -C $9$4 pull >> $5 2>&1
 
     if [ $? != 0 ]; then
         echo 0
