@@ -128,6 +128,7 @@ if [ $1 == 'pushBranch' ]; then
 
                 mv $9$oldDir $9$4 >> $5 2>&1 \
                 \
+                && sed -i "/^$oldDir 0/d" $2 >> $5 2>&1 \
                 && echo "$4 1" >> $2 2>&1
 
                 # 添加 Nginx 配置
